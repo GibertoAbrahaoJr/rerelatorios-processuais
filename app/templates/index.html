@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="container">
+  <section class="hero card">
+    <div>
+      <p class="eyebrow">Sistema web privado</p>
+      <h1>Gere relatórios processuais a partir de uma planilha</h1>
+      <p>Envie Excel ou CSV com a coluna <b>numero_processo</b>. O sistema processa a lista, consulta o provedor configurado e gera relatórios padronizados em Word.</p>
+    </div>
+  </section>
+  <section class="grid">
+    <div class="card">
+      <h2>Enviar planilha</h2>
+      <form method="post" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx,.xls,.csv" required>
+        <button type="submit">Processar e gerar relatórios</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Modelo aceito</h2>
+      <pre>numero_processo,cliente,pasta,observacao
+1001234-56.2024.8.26.0100,Cliente A,Pasta 001,Obs interna</pre>
+      <p class="muted">Obrigatória: <b>numero_processo</b>. Opcionais: cliente, pasta e observacao.</p>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Funções já estruturadas</h2>
+    <div class="features">
+      <span>Login</span><span>Upload Excel/CSV</span><span>Relatório Word</span><span>Download em ZIP</span><span>DataJud preparado</span><span>IA preparada</span>
+    </div>
+  </section>
+</main>
+{% endblock %}

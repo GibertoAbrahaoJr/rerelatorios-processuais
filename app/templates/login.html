@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Relatórios Processuais IA</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <h1>Relatórios Processuais IA</h1>
+    <p>Acesse seu painel privado.</p>
+    {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+    <form method="post" action="/login">
+      <label>Usuário</label><input name="username" autocomplete="username" required>
+      <label>Senha</label><input type="password" name="password" autocomplete="current-password" required>
+      <button type="submit">Entrar</button>
+    </form>
+    <small>Usuário inicial: <b>admin</b> | senha inicial: <b>troque-esta-senha</b>. Altere no ambiente da hospedagem.</small>
+  </main>
+</body>
+</html>

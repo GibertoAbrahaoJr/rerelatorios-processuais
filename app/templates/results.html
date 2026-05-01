@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="container">
+  <section class="card">
+    <h1>Relatórios gerados</h1>
+    <p>{{ count }} processo(s) processado(s).</p>
+    <a class="button-link" href="/reports/{{ zip_file }}">Baixar todos em ZIP</a>
+    <table>
+      <thead><tr><th>Cliente</th><th>Processo</th><th>Tribunal</th><th>Fonte</th><th>Resumo</th><th>Word</th></tr></thead>
+      <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.cliente }}</td><td>{{ item.numero }}</td><td>{{ item.tribunal }}</td><td>{{ item.fonte }}</td><td>{{ item.resumo }}</td>
+        <td><a href="/reports/{{ item.report_file }}">Baixar</a></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <p><a href="/">Voltar</a></p>
+  </section>
+</main>
+{% endblock %}
