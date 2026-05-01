@@ -6,16 +6,26 @@
     <p>{{ count }} processo(s) processado(s).</p>
     <a class="button-link" href="/reports/{{ zip_file }}">Baixar todos em ZIP</a>
     <table>
-      <thead><tr><th>Cliente</th><th>Processo</th><th>Tribunal</th><th>Fonte</th><th>Resumo</th><th>Word</th></tr></thead>
+      <thead><tr><th>Cliente</th><th>Processo</th><th>Tribunal</th><th>Fonte/Status</th><th>Resumo</th><th>Últimos andamentos</th><th>Word</th></tr></thead>
       <tbody>
       {% for item in items %}
       <tr>
-        <td>{{ item.cliente }}</td><td>{{ item.numero }}</td><td>{{ item.tribunal }}</td><td>{{ item.fonte }}</td><td>{{ item.resumo }}</td>
+        <td>{{ item.cliente }}</td>
+        <td>{{ item.numero }}</td>
+        <td>{{ item.tribunal }}<br><small>{{ item.classe }}</small></td>
+        <td>{{ item.fonte }}<br><small>{{ item.status }}</small></td>
+        <td>{{ item.resumo }}</td>
+        <td>
+          {% for mov in item.movimentos %}
+            <div class="movement"><b>{{ mov.data }}</b><br>{{ mov.texto }}</div>
+          {% endfor %}
+        </td>
         <td><a href="/reports/{{ item.report_file }}">Baixar</a></td>
       </tr>
       {% endfor %}
       </tbody>
     </table>
+    <p class="muted">Observação: a consulta é feita na API Pública DataJud/CNJ. Processos sigilosos, peças e documentos internos dependem de integração específica com o portal do tribunal e certificado digital.</p>
     <p><a href="/">Voltar</a></p>
   </section>
 </main>

@@ -1,71 +1,51 @@
-# Relatórios Processuais IA — App Web para Hospedagem
+# Relatórios Processuais IA — App Web com DataJud/CNJ
 
-Este é um aplicativo web para ser hospedado e acessado por domínio, por exemplo:
+Aplicativo web para upload de Excel/CSV com processos, consulta pública via DataJud/CNJ e geração de relatórios em Word.
 
-`https://relatorios.seudominio.com.br`
+## O que esta versão faz
 
-## O que já faz
-
-- Login com usuário e senha.
-- Upload de Excel/CSV.
+- Login privado.
+- Upload de planilha `.xlsx`, `.xls` ou `.csv`.
 - Leitura da coluna obrigatória `numero_processo`.
-- Campos opcionais: `cliente`, `pasta`, `observacao`.
-- Identificação básica de tribunal pelo número CNJ.
-- Geração de relatório Word individual por processo.
-- Download individual e ZIP com todos os relatórios.
-- Estrutura pronta para DataJud/CNJ.
-- Estrutura pronta para IA.
-
-## O que ainda não está ativado
-
-- Consulta real aos tribunais com certificado digital.
-- Consulta de autos sigilosos.
-- IA real via OpenAI API.
-
-Esses pontos exigem chaves, credenciais, certificados e validação técnica/jurídica por tribunal.
-
-## Rodar localmente
-
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-uvicorn app.main:app --reload
-```
-
-Acesse:
-
-`http://127.0.0.1:8000`
-
-Login inicial:
-
-- Usuário: `admin`
-- Senha: `troque-esta-senha`
-
-## Subir no Render
-
-1. Crie conta no Render.
-2. Crie um novo Web Service.
-3. Envie este projeto para um GitHub ou faça deploy pelo repositório.
-4. O Render detectará o `render.yaml`.
-5. Altere a variável `APP_PASSWORD` para uma senha forte.
-6. Depois aponte seu domínio para o serviço.
-
-## Variáveis importantes
-
-- `APP_USERNAME`: usuário de login.
-- `APP_PASSWORD`: senha de login.
-- `SESSION_SECRET`: chave interna de sessão.
-- `DATA_PROVIDER`: `mock` ou `datajud`.
-- `DATAJUD_ENABLED`: `true` ou `false`.
-- `DATAJUD_API_KEY`: chave do DataJud, se aplicável.
-- `OPENAI_API_KEY`: chave da OpenAI, para futura análise por IA.
+- Identificação automática do tribunal pelo número CNJ.
+- Consulta real à API Pública do DataJud/CNJ.
+- Exibição dos últimos andamentos retornados pela API.
+- Geração de relatório Word individual e ZIP com todos os relatórios.
 
 ## Modelo de planilha
 
+Coluna obrigatória:
+
 ```csv
-numero_processo,cliente,pasta,observacao
-1001234-56.2024.8.26.0100,Cliente A,Pasta 001,Analisar urgência
-0009876-12.2023.5.15.0001,Cliente B,Pasta 002,Verificar execução
+numero_processo
+1504574-36.2024.8.26.0362
 ```
+
+Colunas opcionais: `cliente`, `pasta`, `observacao`.
+
+## Variáveis de ambiente no Render
+
+Em **Render > Environment**, configure:
+
+```env
+APP_USERNAME=admin
+APP_PASSWORD=sua-senha-forte
+SESSION_SECRET=uma-chave-secreta-grande
+DATA_PROVIDER=datajud
+DATAJUD_ENABLED=true
+DATAJUD_API_KEY=cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==
+```
+
+A `DATAJUD_API_KEY` acima é a chave pública divulgada na Wiki oficial do DataJud/CNJ na data de criação desta versão. O CNJ pode alterá-la; nesse caso, basta atualizar a variável no Render.
+
+## Start Command no Render
+
+Use exatamente:
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+## Limitações desta versão
+
+A consulta é feita via API Pública DataJud/CNJ, que retorna metadados de processos públicos. Processos sigilosos, peças, documentos e detalhes disponíveis apenas mediante login/certificado digital exigem uma próxima etapa de integração específica com PJe/e-SAJ/eproc ou portal do tribunal.

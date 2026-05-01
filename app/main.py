@@ -66,7 +66,9 @@ async def upload(request: Request, file: UploadFile = File(...), user=Depends(cu
             "tribunal": data.get("tribunal", ""),
             "classe": data.get("classe", ""),
             "fonte": data.get("fonte", ""),
+            "status": data.get("status_consulta", ""),
             "resumo": analysis.get("resumo_executivo", ""),
+            "movimentos": data.get("movimentacoes", [])[-3:],
             "report_file": Path(report_path).name,
         })
 

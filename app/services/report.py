@@ -13,6 +13,8 @@ def generate_docx(data: dict, analysis: dict) -> str:
     doc = Document()
     doc.add_heading("Relatório Processual Padronizado", 0)
 
+    doc.add_paragraph("Relatório gerado automaticamente a partir da planilha enviada e da consulta pública configurada no sistema.")
+
     doc.add_heading("1. Identificação do Processo", level=1)
     fields = [
         ("Cliente", data.get("cliente")),
@@ -22,9 +24,11 @@ def generate_docx(data: dict, analysis: dict) -> str:
         ("Órgão julgador", data.get("orgao_julgador")),
         ("Classe", data.get("classe")),
         ("Assunto", data.get("assunto")),
-        ("Data de distribuição", data.get("data_distribuicao")),
+        ("Grau/Nível", data.get("grau")),
+        ("Data de distribuição/ajuizamento", data.get("data_distribuicao")),
         ("Fonte de consulta", data.get("fonte")),
-        ("Última atualização", data.get("ultima_atualizacao")),
+        ("Status da consulta", data.get("status_consulta")),
+        ("Última atualização da consulta", data.get("ultima_atualizacao")),
     ]
     for label, value in fields:
         if value:
@@ -36,13 +40,17 @@ def generate_docx(data: dict, analysis: dict) -> str:
     doc.add_heading("3. Situação Atual", level=1)
     doc.add_paragraph(analysis.get("situacao_atual", ""))
 
-    doc.add_heading("4. Últimas Movimentações", level=1)
-    for mov in data.get("movimentacoes", []):
-        if isinstance(mov, dict):
-            text = f"{mov.get('data', '')} - {mov.get('texto', '')}".strip(" -")
-        else:
-            text = str(mov)
-        doc.add_paragraph(text, style="List Bullet")
+    doc.add_heading("4. Últimos Andamentos Localizados", level=1)
+    movimentos = data.get("movimentacoes", [])
+    if movimentos:
+        for mov in movimentos:
+            if isinstance(mov, dict):
+                text = f"{mov.get('data', '')} - {mov.get('texto', '')}".strip(" -")
+            else:
+                text = str(mov)
+            doc.add_paragraph(text, style="List Bullet")
+    else:
+        doc.add_paragraph("Nenhuma movimentação retornada pela fonte pública consultada.")
 
     doc.add_heading("5. Pontos de Atenção", level=1)
     doc.add_paragraph(analysis.get("pontos_de_atencao", ""))
