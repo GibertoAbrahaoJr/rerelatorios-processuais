@@ -1,51 +1,48 @@
-# Relatórios Processuais IA — App Web com DataJud/CNJ
+# Agente Local TJSP - MVP
 
-Aplicativo web para upload de Excel/CSV com processos, consulta pública via DataJud/CNJ e geração de relatórios em Word.
+Este agente roda na sua máquina e abre o Chrome local para consultar o e-SAJ/TJSP.
 
-## O que esta versão faz
+## Instalação
 
-- Login privado.
-- Upload de planilha `.xlsx`, `.xls` ou `.csv`.
-- Leitura da coluna obrigatória `numero_processo`.
-- Identificação automática do tribunal pelo número CNJ.
-- Consulta real à API Pública do DataJud/CNJ.
-- Exibição dos últimos andamentos retornados pela API.
-- Geração de relatório Word individual e ZIP com todos os relatórios.
-
-## Modelo de planilha
-
-Coluna obrigatória:
-
-```csv
-numero_processo
-1504574-36.2024.8.26.0362
-```
-
-Colunas opcionais: `cliente`, `pasta`, `observacao`.
-
-## Variáveis de ambiente no Render
-
-Em **Render > Environment**, configure:
-
-```env
-APP_USERNAME=admin
-APP_PASSWORD=sua-senha-forte
-SESSION_SECRET=uma-chave-secreta-grande
-DATA_PROVIDER=datajud
-DATAJUD_ENABLED=true
-DATAJUD_API_KEY=cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==
-```
-
-A `DATAJUD_API_KEY` acima é a chave pública divulgada na Wiki oficial do DataJud/CNJ na data de criação desta versão. O CNJ pode alterá-la; nesse caso, basta atualizar a variável no Render.
-
-## Start Command no Render
-
-Use exatamente:
+No Terminal, dentro desta pasta:
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port $PORT
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+playwright install chromium
 ```
 
-## Limitações desta versão
+## Rodar o agente
 
-A consulta é feita via API Pública DataJud/CNJ, que retorna metadados de processos públicos. Processos sigilosos, peças, documentos e detalhes disponíveis apenas mediante login/certificado digital exigem uma próxima etapa de integração específica com PJe/e-SAJ/eproc ou portal do tribunal.
+```bash
+uvicorn agente_tjsp:app --host 127.0.0.1 --port 5005
+```
+
+## Testar se está online
+
+Abra no navegador:
+
+```text
+http://127.0.0.1:5005/status
+```
+
+## Consulta pública TJSP
+
+Substitua pelo número real:
+
+```text
+http://127.0.0.1:5005/consultar-publico?numero_processo=1001234-56.2024.8.26.0100
+```
+
+## Consulta restrita / certificado
+
+```text
+http://127.0.0.1:5005/consultar-restrito?numero_processo=1001234-56.2024.8.26.0100
+```
+
+Essa rota abre o Chrome para login no e-SAJ com certificado. A extração automática de peças restritas precisa ser implementada depois de validarmos o fluxo real de login e as telas exibidas para seu certificado.
+
+## Observação
+
+Este MVP não burla login, captcha, restrições do tribunal, sigilo processual ou permissões. Ele usa o navegador local autenticado pelo próprio advogado.
